@@ -7,6 +7,37 @@ class HashTableEntry:
         self.value = value
         self.next = None
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def find(self, key):
+        current = self.head
+        # Constant Loop to find the correct node with the corresponding key you are looking for
+        while current is not None:
+            if current.key == key:
+                return current
+            current = current.next
+
+        return current
+
+    def update_or_else_insert_at_head(self, key, value):
+        # check if the key is already in the linked list
+            # find the node
+        current = self.head
+        while current is not None:
+            # if key is found, change the value
+            if current.key == key:
+                current.value = value
+                # exit function immediately
+                return
+            current = current.next
+
+        # if we reach the end of the list, it's not here! 
+        # make a new node, and insert at head
+        new_node = HashTableEntry(key, value)
+        new_node.next = self.head
+        self.head = new_node
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -91,8 +122,11 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        hashed_key = self.hash_index(key)
-        self.bucket[hashed_key] = value
+        index = self.hash_index(key)
+        if self.bucket[index] == None:
+            self.bucket[index] = HashTableEntry(index,value)
+        else:
+            self.bucket[LinkedList().update_or_else_insert_at_head(index,value)]
 
 
     def delete(self, key):
@@ -104,8 +138,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        hashed_key = self.hash_index(key)
-        self.bucket.pop(hashed_key)
+        # This probably doesn't work 
+        # So I need to delete a value that could be in a linked list but i need to iterate through the list and find a base case where the key is equal to the key we are looking for
+        index = self.hash_index(key)
+        if (self.bucket[index] == key):
+            self.bucket[index] = None
+        else:
+            #  Need to figure out how to make the delete function on the next node in the linked list
+            return self.delete(LinkedList().find(key)) 
+
 
 
     def get(self, key):
@@ -121,7 +162,10 @@ class HashTable:
         if (self.bucket[index] == None):
             return None
         else:
-            return self.bucket[index]
+            if (self.bucket[index] == key):
+                return self.bucket[index]
+            else:
+                return self.get(LinkedList().find(key))
 
 
 
@@ -133,6 +177,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Change the capicity to the new capacity that is passed in
+        # For every key in the in the Hashtable rehash it
+        self.bucket = [None] * new_capacity
 
 
 
