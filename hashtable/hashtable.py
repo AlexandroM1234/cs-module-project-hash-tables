@@ -160,26 +160,38 @@ class HashTable:
         # Your code here
         index = self.hash_index(key)
         if (self.bucket[index] == None):
-            return None
+            return
         else:
-            if (self.bucket[index] == key):
-                return self.bucket[index]
+            entry = self.bucket[index].find(key)
+            # if it's found entry will be the node
+            if (entry != None):
+                return entry.value
             else:
-                return self.get(LinkedList().find(key))
-
-
+                return entry
 
     def resize(self, new_capacity):
         """
         Changes the capacity of the hash table and
-        rehashes all key/value pairs.
-
+        rehashes all key/value pairs.       ​
         Implement this.
         """
         # Your code here
         # Change the capicity to the new capacity that is passed in
         # For every key in the in the Hashtable rehash it
+        # self.bucket = [None] * new_capacity
+        # store the old bucket
+
+        temp_storage = self.bucket
+        # create new bucket with the new capacity
         self.bucket = [None] * new_capacity
+        self.capacity = new_capacity
+        # we loop through temp_storage and put everything in our new bucket
+        for ll in temp_storage:
+            if ll is not None:
+                cur = ll.head
+                while cur is not None:
+                    self.put(cur.key, cur.value)
+                    cur = cur.next
 
 
 

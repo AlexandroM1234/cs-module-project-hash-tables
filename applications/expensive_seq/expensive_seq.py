@@ -2,7 +2,13 @@
 
 
 def expensive_seq(x, y, z):
+    cache = {}
     # Your code here
+    # Need more understanding of the problem
+    if x <= 0:
+        return y+z
+    if x > 0:
+        return expensive_seq(cache[x],cache[y] , z) + expensive_seq(x-2,y+2,z*2) + expensive_seq(x-3,y+3,z*3)
 
 
 
